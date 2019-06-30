@@ -38,7 +38,7 @@ class e107projects_url
 		$config['project'] = array(
 			'alias'    => 'project',
 			// Matched against url, and if true, redirected to 'redirect' below.
-			'regex'    => '^{alias}/(.*)/(.*)$',
+			'regex'    => '^{alias}/([^\/]*)/([^\/]*)/?$',
 			// Used by e107::url(); to create a url from the db table.
 			'sef'      => '{alias}/{user}/{repository}',
 			// File-path of what to load when the regex returns true.
@@ -65,6 +65,17 @@ class e107projects_url
 			'sef'      => '{alias}',
 			// File-path of what to load when the regex returns true.
 			'redirect' => '{e_PLUGIN}e107projects/submit.php',
+		);
+
+		// Contributors page.
+		$config['contributors'] = array(
+			'alias'    => 'contributors',
+			// Matched against url, and if true, redirected to 'redirect' below.
+			'regex'    => '^{alias}$',
+			// Used by e107::url(); to create a url from the db table.
+			'sef'      => '{alias}',
+			// File-path of what to load when the regex returns true.
+			'redirect' => '{e_PLUGIN}e107projects/contributors.php'
 		);
 
 		return $config;

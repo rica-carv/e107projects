@@ -78,12 +78,14 @@ class e107projects_project_releases_menu
 
 		$releases = $db->select('e107projects_release', '*', $where);
 
-		$content .= '<ul class="list-group">';
+		$content .= '<div class="nano">';
+		$content .= '<div class="nano-content">';
+		$content .= '<div class="list-group">';
 
 		// Master.
 		$url = 'https://github.com/' . $fullName . '/archive/' . $project['project_default_branch'] . '.zip';
 		$content .= '<a class="list-group-item" href="' . $url . '" target="_blank">';
-		$content .= '<strong>' . $project['project_default_branch'] . '</strong> ';
+		$content .= '<strong>' . $project['project_default_branch'] . '</strong> <span class="small">(zip)</span>';
 		$content .= '<span class="label label-danger">' . LAN_E107PROJECTS_FRONT_64 . '</span>';
 		$content .= '</a>';
 
@@ -108,7 +110,9 @@ class e107projects_project_releases_menu
 			}
 		}
 
-		$content .= '</ul>';
+		$content .= '</div>';
+		$content .= '</div>';
+		$content .= '</div>';
 
 		$ns->tablerender($caption, $content);
 	}

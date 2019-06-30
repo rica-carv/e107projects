@@ -39,33 +39,59 @@ class e107projects_header
 	{
 		$this->plugPrefs = e107::getPlugConfig('e107projects')->getPref();
 
+		// Allow to use OctIcons globally.
 		e107::library('load', 'octicons', 'minified');
+		// Common behaviors.
+		e107::js('e107projects', 'js/e107projects.common.js');
 
+		// If user profile is incomplete, redirecting to usersettings.php.
 		if(USER_AREA && defset('e_PAGE') != 'usersettings.php' && $this->incompleteUserAccount())
 		{
 			e107::getMessage()->add(LAN_E107PROJECTS_FRONT_05, E_MESSAGE_ERROR, true);
 			e107::redirect('/usersettings.php');
 		}
 
+		// Load files for OpenLayers Map menu.
 		if(USER_AREA && e107::getMenu()->isLoaded('e107projects_openlayers'))
 		{
 			$this->loadOpenLayers();
 		}
 
+		// Load files for Summary menu.
 		if(USER_AREA && e107::getMenu()->isLoaded('e107projects_summary'))
 		{
 			$this->needCSS = true;
 		}
 
+		$menuGitRl = e107::getMenu()->isLoaded('e107projects_project_releases');
+		$menuOrgRl = e107::getMenu()->isLoaded('e107projects_project_e107org');
+		$menuContr = e107::getMenu()->isLoaded('e107projects_contributions');
+
+		// Load files project related menus.
+		if(USER_AREA && ($menuGitRl || $menuOrgRl || $menuContr))
+		{
+			$this->loadNanoScroller();
+			$this->needCSS = true;
+		}
+
+		// Load GeoComplete files for user settings form.
 		if(defset('e_PAGE') == 'usersettings.php')
 		{
 			$this->loadGeoComplete();
 		}
 
+		// Load Ajax helper JS for project submission and search page.
 		if(defset('e_URL_LEGACY') == 'e107_plugins/e107projects/submit.php' || defset('e_URL_LEGACY') == 'e107_plugins/e107projects/projects.php'
 		)
 		{
 			e107::js('e107projects', 'js/e107projects.submit.js');
+			$this->needCSS = true;
+		}
+
+		// Load Isotope files for contributors page.
+		if(defset('e_URL_LEGACY') == 'e107_plugins/e107projects/contributors.php')
+		{
+			$this->loadIsotope();
 			$this->needCSS = true;
 		}
 
@@ -100,37 +126,87 @@ class e107projects_header
 	}
 
 	/**
+	 * Load Isotope library.
+	 */
+	public function loadIsotope()
+	{
+		if(($library = e107::library('load', 'isotope', 'minified')) && !empty($library['loaded']))
+		{
+			e107::js('e107projects', 'js/e107projects.isotope.js');
+		}
+	}
+
+	/**
+	 * Load NanoScroller library.
+	 */
+	public function loadNanoScroller()
+	{
+		if(($library = e107::library('load', 'jquery.nanoscroller', 'minified')) && !empty($library['loaded']))
+		{
+			e107::js('e107projects', 'js/e107projects.nanoscroller.js');
+		}
+	}
+
+	/**
 	 * Load OpenLayers library.
 	 */
 	public function loadOpenLayers()
 	{
-		if(($library = e107::library('load', 'openlayers')) && !empty($library['loaded']))
+		e107::library('load', 'openlayers');
+		e107::library('load', 'ol3-panzoom');
+
+		$this->needCSS = true;
+
+		// FIXME - Move this to an async Ajax request?
+
+		$db = e107::getDb();
+		$db->gen("SELECT l.location_lat, l.location_lon, l.location_name, u.user_name, u.user_login, c.contributor_name FROM #user_extended AS ue 
+			LEFT JOIN #e107projects_location AS l ON l.location_name = ue.user_plugin_e107projects_location
+			LEFT JOIN #user AS u ON ue.user_extended_id = u.user_id
+			LEFT JOIN #e107projects_contributor AS c ON ue.user_extended_id = c.contributor_id
+			WHERE u.user_name != '' ");
+
+		$markers = array();
+		while($row = $db->fetch())
 		{
-			e107::js('e107projects', 'js/e107projects.openlayers.js');
-			$this->needCSS = true;
+			$key = $row['location_lat'] . '_' . $row['location_lon'];
 
-			// FIXME - Move this to an async Ajax request?
-
-			$db = e107::getDb();
-			$db->gen("SELECT l.location_lat, l.location_lon FROM #user_extended AS ue 
-			LEFT JOIN #e107projects_location AS l ON l.location_name = ue.user_plugin_e107projects_location");
-
-			$locations = array();
-			while($row = $db->fetch())
+			if(!isset($markers[$key]))
 			{
-				$locations[] = array(
-					'lat' => $row['location_lat'],
-					'lon' => $row['location_lon'],
+				$markers[$key] = array(
+					'location'     => array(
+						'name' => $row['location_name'],
+						'lat'  => $row['location_lat'],
+						'lon'  => $row['location_lon'],
+					),
+					'contributors' => array(),
 				);
 			}
 
-			e107::js('settings', array(
-				'e107projects' => array(
-					'marker'    => SITEURL . e_PLUGIN . 'e107projects/images/marker.png',
-					'locations' => $locations,
-				),
-			));
+			$name = $row['user_name'];
+
+			if(!empty($row['contributor_name']))
+			{
+				$name .= ' (' . $row['contributor_name'] . ')';
+			}
+
+			$markers[$key]['contributors'][] = array(
+				'name' => $name,
+			);
 		}
+
+		e107::js('settings', array(
+			'e107projects' => array(
+				'marker'  => SITEURL . e_PLUGIN . 'e107projects/images/marker.png',
+				'markers' => $markers,
+                'geojson' => SITEURL . e_PLUGIN . 'e107projects/js/countries.geojson',
+			),
+			'panZoom'      => array(
+				'resources' => SITEURL . e_WEB . 'lib/ol3-panzoom/resources/',
+			),
+		));
+
+		e107::js('e107projects', 'js/e107projects.openlayers.js');
 	}
 
 	/**

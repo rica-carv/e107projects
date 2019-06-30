@@ -204,9 +204,21 @@ class e107projectsGithub
 		}
 
 		$reopAPI = $this->client->api('repo');
-		$data = $this->paginator->fetchAll($reopAPI, 'readme', array($username, $repository));
 
-		return varset($data['download_url'], '');
+		$url = 'https://api.github.com/repos/' . $username . '/' . $repository . '/readme/';
+
+		$response = e107projects_http_request($url);
+		if(!empty($response->code) && $response->code != 404)
+		{
+			$data = $this->paginator->fetchAll($reopAPI, 'readme', array($username, $repository));
+		}
+
+		if(isset($data) && !empty($data['download_url']))
+		{
+			$readme = $data['download_url'];
+		}
+
+		return $readme;
 	}
 
 	/**
@@ -448,10 +460,10 @@ class e107projectsGithub
 			// Got it! Save user details to database for later use.
 			if(varset($data->login, false))
 			{
-				$count = $db->count('e107projects_contributor', 'contributor_id', 'contributor_name = "' . $tp->toDB($data->login) . '"');
+				$contributor_gid = $db->retrieve('e107projects_contributor', 'contributor_gid', 'contributor_name = "' . $tp->toDB($data->login) . '"');
 
-				// If contributor exists in database, but no e107 user ID associated...
-				if($count > 0)
+				// If contributor exists in database, we update...
+				if((int) $contributor_gid > 0)
 				{
 					// Update contributor details.
 					$update = array(

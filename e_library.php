@@ -42,6 +42,31 @@ class e107projects_library
 			),
 		);
 
+		// OL3-PanZoom v0.2
+		$libraries['ol3-panzoom'] = array(
+			'name'              => 'OL3-PanZoom',
+			'vendor_url'        => 'https://github.com/mapgears/ol3-panzoom',
+			'download_url'      => 'https://github.com/mapgears/ol3-panzoom/releases/tag/v0.2',
+			'version_arguments' => array(
+				'file'    => 'ol3pz.js',
+				// v0.1-3-ge87dcb5
+				'pattern' => '/v(\d\.\d)/',
+				'lines'   => 5,
+			),
+			'files'             => array(
+				'css' => array(
+					'ol3pz.css' => array(
+						'zone' => 2,
+					),
+				),
+				'js'  => array(
+					'ol3pz.js' => array(
+						'zone' => 2,
+					),
+				),
+			),
+		);
+
 		// GeoComplete v1.6.4.
 		$libraries['geocomplete'] = array(
 			'name'              => 'GeoComplete',
@@ -93,6 +118,80 @@ class e107projects_library
 					'files' => array(
 						'css' => array(
 							'octicons.min.css' => array(
+								'zone' => 2,
+							),
+						),
+					),
+				),
+			),
+		);
+
+		// jquery.nanoscroller.
+		$libraries['jquery.nanoscroller'] = array(
+			'name'             => 'nanoScroller.js',
+			'vendor_url'       => 'https://jamesflorentino.github.io/nanoScrollerJS/',
+			'download_url'     => 'https://jamesflorentino.github.io/nanoScrollerJS/',
+			'version_arguments' => array(
+				'file'    => 'jquery.nanoscroller.js',
+				// nanoScrollerJS - v0.8.7 - 2015
+				'pattern' => '/(0\.\d+\.\d+)/',
+				'lines'   => 3,
+			),
+			'files'            => array(
+				'css' => array(
+					'nanoscroller.css' => array(
+						'zone' => 2,
+					),
+				),
+				'js'  => array(
+					'jquery.nanoscroller.js' => array(
+						'zone' => 2,
+					),
+				),
+			),
+			'variants'         => array(
+				// All properties defined for 'minified' override top-level properties.
+				'minified' => array(
+					'files' => array(
+						'css' => array(
+							'nanoscroller.css' => array(
+								'zone' => 2,
+							),
+						),
+						'js'  => array(
+							'jquery.nanoscroller.min.js' => array(
+								'zone' => 2,
+							),
+						),
+					),
+				),
+			),
+		);
+
+		// isotope.
+		$libraries['isotope'] = array(
+			'name'             => 'isotope',
+			'vendor_url'       => 'https://github.com/metafizzy/isotope',
+			'download_url'     => 'https://github.com/metafizzy/isotope/releases/tag/v3.0.1',
+			'version_arguments' => array(
+				'file'    => 'dist/isotope.pkgd.js',
+				// Isotope PACKAGED v3.0.1
+				'pattern' => '/(3\.\d+\.\d+)/',
+				'lines'   => 3,
+			),
+			'files'            => array(
+				'js'  => array(
+					'dist/isotope.pkgd.js' => array(
+						'zone' => 2,
+					),
+				),
+			),
+			'variants'         => array(
+				// All properties defined for 'minified' override top-level properties.
+				'minified' => array(
+					'files' => array(
+						'js'  => array(
+							'dist/isotope.pkgd.min.js' => array(
 								'zone' => 2,
 							),
 						),

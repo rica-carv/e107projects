@@ -55,7 +55,7 @@ class e107projects_shortcodes extends e_shortcode
 	{
 		$count = (int) $this->var['col_3'];
 		$formatted = number_format($count);
-		return '<strong>' . $formatted . '</strong><br/>' . LAN_E107PROJECTS_FRONT_02;
+		return '<strong>' . $formatted . '</strong><br/>' . LAN_E107PROJECTS_FRONT_76;
 	}
 
 	/**
@@ -275,6 +275,33 @@ class e107projects_shortcodes extends e_shortcode
 		$html .= '</button>';
 
 		$html .= '<ul class="dropdown-menu">';
+
+		// Search for
+		$html .= '<li><strong>' . LAN_E107PROJECTS_FRONT_69 . '</strong></li>';
+
+		$html .= '<li class="radio-content">';
+		$html .= '<label class="radio">';
+		$html .= $form->radio('search_for', 0, true) . ' ' . LAN_E107PROJECTS_FRONT_70;
+		$html .= '</label>';
+		$html .= '</li>';
+
+		$html .= '<li class="radio-content">';
+		$html .= '<label class="radio">';
+		$html .= $form->radio('search_for', 1, false) . ' ' . LAN_E107PROJECTS_FRONT_71;
+		$html .= '</label>';
+		$html .= '</li>';
+
+		$html .= '<li class="radio-content">';
+		$html .= '<label class="radio">';
+		$html .= $form->radio('search_for', 2, false) . ' ' . LAN_E107PROJECTS_FRONT_72;
+		$html .= '</label>';
+		$html .= '</li>';
+
+		$html .= '<li class="radio-content">';
+		$html .= '<label class="radio">';
+		$html .= $form->radio('search_for', 9, false) . ' ' . LAN_E107PROJECTS_FRONT_73;
+		$html .= '</label>';
+		$html .= '</li>';
 
 		// Search by
 		$html .= '<li><strong>' . LAN_E107PROJECTS_FRONT_25 . '</strong></li>';

@@ -15,7 +15,7 @@ if(!e107::isInstalled('e107projects'))
 	exit;
 }
 
-define('E107PROJECTS_CALLBACK_DEBUG', true);
+define('E107PROJECTS_CALLBACK_DEBUG', false);
 
 
 /**
@@ -102,7 +102,6 @@ class e107ProjectsCallback
 			// Any time a Repository is forked.
 			// @see https://developer.github.com/v3/activity/events/types/#forkevent
 			case 'fork':
-				// TODO
 				$event->trigger('e107projects_webhook_fork', $this->payload);
 				break;
 
@@ -113,9 +112,8 @@ class e107ProjectsCallback
 				break;
 
 			// Any time a comment on an issue is created, edited, or deleted.
-			// @see https://developer.github.com/v3/issues/comments/
+			// @see https://developer.github.com/v3/activity/events/types/#issuecommentevent
 			case 'issue_comment':
-				// TODO
 				$event->trigger('e107projects_webhook_issue_comment', $this->payload);
 				break;
 
@@ -123,14 +121,12 @@ class e107ProjectsCallback
 			// opened, edited, milestoned, demilestoned, closed, or reopened.
 			// @see https://developer.github.com/v3/activity/events/types/#issuesevent
 			case 'issues':
-				// TODO
 				$event->trigger('e107projects_webhook_issues', $this->payload);
 				break;
 
-			// Any time a Label is created, edited, or deleted.
+			// Any time a Repository Label is created, edited, or deleted.
 			// @see https://developer.github.com/v3/activity/events/types/#labelevent
 			case 'label':
-				// TODO
 				$event->trigger('e107projects_webhook_label', $this->payload);
 				break;
 

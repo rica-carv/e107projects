@@ -67,7 +67,10 @@ class e107projects_contributions_menu
 		$caption = LAN_E107PROJECTS_FRONT_53;
 		$content = '';
 
-		$content .= '<ul class="list-group">';
+		$content .= '<div class="nano">';
+		$content .= '<div class="nano-content">';
+		$content .= '<div class="list-group">';
+
 		foreach($contributions as $contribution)
 		{
 			$user_id = $contribution['contributor_id'];
@@ -85,12 +88,15 @@ class e107projects_contributions_menu
 
 			$avatar = '<img class="img-circle user-avatar" src="' . $contribution['contributor_avatar'] . '" width="18" height="18" alt=""/>';
 			
-			$content .= '<a class="list-group-item" href="' . $url . '">';
+			$content .= '<a class="list-group-item' . ($url == '#' ? ' no-link' : '') . '" href="' . $url . '">';
 			$content .= $avatar . ' <strong>' . $name . '</strong> ';
 			$content .= '<span class="badge">' . $count . '</span>';
 			$content .= '</a>';
 		}
-		$content .= '</ul>';
+
+		$content .= '</div>';
+		$content .= '</div>';
+		$content .= '</div>';
 
 		$ns->tablerender($caption, $content);
 	}
